@@ -12,10 +12,10 @@
         }
     ],
     "env": {
-        "APP_NAME": "Laravel Vercel",
         "APP_ENV": "production",
         "APP_DEBUG": "false",
-        "APP_URL": "https://laravel-vercel.vercel.app",
+        "APP_URL": "quiz-game-backend-blush.vercel.app",
+
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
@@ -28,6 +28,7 @@
         "VIEW_COMPILED_PATH": "/tmp/views",
         "SSR_TEMP_PATH": "/tmp/ssr",
         "NODE_PATH": "node",
+        
         "DB_CONNECTION": "pgsql",
         "DB_HOST": "ec2-44-210-228-110.compute-1.amazonaws.com",
         "DB_PORT": "5432",
