@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Questions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +24,13 @@ Route::get('/select', function () {
 });
 
 Route::get('/selectAll', function () {
-    return Questions::all();
+    $results = DB::select('SELECT * FROM allquestions');
+    return response()->json($results);
+});
+
+Route::get('/selectRandom', function () {
+    $results = DB::select('SELECT * FROM questions_random');
+    return response()->json($results);
 });
 
 

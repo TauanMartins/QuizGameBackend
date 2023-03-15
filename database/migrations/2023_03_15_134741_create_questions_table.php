@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string("question", 2000);
-            $table->string("img", 255)->nullable();
-            $table->char("difficulty", 1);
-            $table->string("rightAnswer", 1000);
-            $table->string("distractionAnswer1", 1000);
-            $table->string("distractionAnswer2", 1000)->nullable();
-            $table->string("distractionAnswer3", 1000)->nullable();
-            $table->timestamps();
+            $table->string('question');
+            $table->string('difficulty');
+            $table->string('rightAnswer');
+            $table->string('distractionAnswer1');
+            $table->string('distractionAnswer2');
+            $table->string('distractionAnswer3');
+            $table->string('img');
+            $table->unsignedBigInteger('theme_fk');
+            $table->foreign('theme_fk')->references('id')->on('themes');
         });
     }
 

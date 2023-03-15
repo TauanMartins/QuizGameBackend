@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/selectAll', function () {
+    $results = DB::select('SELECT * FROM allquestions');
+    return response()->json($results);
+});
+
+Route::get('/selectRandom', function () {
+    $results = DB::select('SELECT * FROM questions_random');
+    return response()->json($results);
+});
