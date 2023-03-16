@@ -13,7 +13,7 @@ jobs:
     # Etapa de Instalação de dependências e compilação
     - name: Install dependencies and build
       run: |
-        cd /path/to/application
+        cd /var/www/
         chmod -R 777 ./
         composer install
         cp .env.example .env
