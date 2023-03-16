@@ -6,6 +6,7 @@ ARG uid=1111
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    vim \
     git \
     curl \
     libpq-dev \
