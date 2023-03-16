@@ -13,6 +13,8 @@ jobs:
     # Etapa de Instalação de dependências e compilação
     - name: Install dependencies and build
       run: |
+        ls -la
+        pwd
         cd /var/www/
         chmod -R 777 ./
         composer install
