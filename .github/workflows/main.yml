@@ -13,9 +13,9 @@ jobs:
     # Etapa de Instalação de dependências e compilação
     - name: Install dependencies and build
       run: |
-        composer install
-        cp .env.example .env 2>/dev/null
         echo $KEY
+        cp .env.example .env >/dev/null 2>&1
+        composer install  
         sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env
         sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env
         sed -i "s/DB_HOST=.*/DB_HOST=54.232.152.192/g" .env
