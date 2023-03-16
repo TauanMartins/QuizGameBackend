@@ -30,10 +30,6 @@ jobs:
     - name: Deploy to production server
       uses: appleboy/ssh-action@master
       with:
-        host: ec2-54-232-152-192.sa-east-1.compute.amazonaws.com
-        username: ubuntu
         script: |
-          ls -la
-          pwd
-          cd /path
+          ssh -i $KEY -o StrictHostKeyChecking=no ubuntu@ec2-54-232-152-192.sa-east-1.compute.amazonaws.com "ls -la"
           
