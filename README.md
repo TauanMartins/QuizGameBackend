@@ -1,5 +1,7 @@
 ## To Run this application in Docker
 
+First you will need to have Docker and Composer installed.
+
 - Clone this project to your EC2 machine for example
 - Adjust your .env with "cp .env.example .env" and replace 
     - APP_DEBUG=false
@@ -7,7 +9,7 @@
     - APP_ENV=production
     - Database settings
 - Run "docker-compose up -d" to up your containers
-- Run "docker-compose exec QuizBackend bash" to get into the main container
+- Run "docker-compose exec app bash" to get into the main container
 
 ## Inside the container
 
