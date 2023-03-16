@@ -1,7 +1,13 @@
 ## To Run this application in Docker
 
 First you will need to have Docker and Composer installed.
-
+So if you are running Linux, run these commands first:
+    - "sudo apt update && apt upgrade -y"
+    - "sudo apt install docker docker-compose"
+    - "sudo apt install composer"
+    - "sudo apt install php8.1-dom php8.1-xml php8.1-curl"
+    
+And finally, let's build:
 - Clone this project to your EC2 machine for example
 - Adjust your .env with "cp .env.example .env" and replace 
     - APP_DEBUG=false
