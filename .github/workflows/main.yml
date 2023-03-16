@@ -10,7 +10,30 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Etapas para atualizar a aplicação na máquina de produção
-    - name: Update application on production server
+    # Etapa de Instalação de dependências e compilação
+    - name: Install dependencies and build
       run: |
-        ssh -i ~/.ssh/id_rsa user@production-server 'cd /path/to/application && git pull origin main && chmod -R 777 ./ && composer install && cp .env.example .env && sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env && sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env && sed -i "s/DB_HOST=.*/DB_HOST=54.232.152.192/g" .env && sed -i "s/DB_PORT=.*/DB_PORT=5432/g" .env && sed -i "s/DB_DATABASE=.*/DB_DATABASE=postgres/g" .env && sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env && sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env  && sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env && docker-compose up -d && docker-compose exec app bash -c "php artisan key:generate && php artisan migrate "'
+        cd /path/to/application
+        chmod -R 777 ./
+        composer install
+        cp .env.example .env
+        sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env
+        sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env
+        sed -i "s/DB_HOST=.*/DB_HOST=54.232.152.192/g" .env
+        sed -i "s/DB_PORT=.*/DB_PORT=5432/g" .env
+        sed -i "s/DB_DATABASE=.*/DB_DATABASE=postgres/g" .env
+        sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env
+        sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env  
+        sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env
+        docker-compose up -d
+        docker-compose exec app bash -c "php artisan key:generate && php artisan migrate"
+
+    # Etapa de Deploy na máquina de produção
+    - name: Deploy to production server
+      uses: appleboy/ssh-action@master
+      with:
+        host: 54.232.152.192
+        username: ubuntu
+        key: -----BEGIN RSA PRIVATE KEY-----                  MIIEowIBAAKCAQEArxIh5deKKBwblJhMw7HxovZpNgYFxI6ds7HKq1h/AKRezn61                  HvvIgq5OTu2Qou1jLVOMvyGgOPY5LoMMZ6AMO5RZNClZq9j16188r5drnwHZYukS                  Pqf9UgiqVsc8kng116Sg/iewdm3CsLNFKYYLqPBklaGQLHVe+ixxUmWbbnL/Qdv7                  vnLEaamA9rdr4oT10OXLk3VJyhVEVWs5kYNF0ZYQqB0TK33Mfrhez7mGK0Tb0h5X                  IWBeoxMaTdbfg8S58uf+C0zoWXnmA7SGhrx0QqTEmHmmp2BiHuOr4ARPFNVuINpj                  opKPYDiCMZt3e3F+LasrMu8cWMurnogDhDnBrwIDAQABAoIBAA4Ay0lRFjHjHamj                  DPDSONuqDfxOOwPfzGllHSrbZz0r6JFnvSD/Tqh1PLo/ckQ17Krhde6Lx/8GYsh/                  nuxi9teFJCVx8UQ3lGQBOB9rYyZSxYqNzfHJChAXtVg/k267wsK+3km17v1qBhqQ                  HEYX/LLEl6cIRznnIXOtPlsy2V3aHmpKVo9aPBPII+RmR0GZki1slcuTAk4JtOQv                  ETTE0L+aXaXAMNaf9sLwoAdwmrWAszfeIsO4Lp3dTN/bChlZf7H8SZ/+bsXXquuW                  2L1lyQpMaTEn8yr0fiJ6FS1MFZDLb4gYxHYq3KfOK4kEvqNqpqutWDAt1PRyAN1C                  m1kdJxECgYEA/+2IXqVOkLU4AGtRPIc5pOk09AzcGJ4WxbtCMIgOxETChJfA/2YD                  NpZTE+RcJsFvqrocm3U/SiYe7VSsfVybSLz6CRh9OHrNsGf0LJ3Uq+muTwY/Hop2                  s07O/Q9KjWNtANZc6/XhZGdO5CqmVlwW29Yq9pC7jS918OBypiCPGXUCgYEArx7D                  5Uscan+Xg0DE2LoYDHxPshv/jxTxXGwPkpFqFCLlES+fcU1NZKL6+j0V93wHXDzD                  Yxch2FHJW+W7n/X0Wt5qaSpJWYOFyWxkOtaEbZsEKIdUyjFwzv9X/wjsaBWSNwIA                  nVSf1vD19MzUIf5gGXyEm4GT6CCxYU9yOMaVphMCgYEAg7v6w+0HIcmGCAE1kZhx                  fYdk8HJmIG3PfvxCt8RxBWn3TlTmzQ/ve3upS8XyASj0l8awzvxtFXfF15gMKYMv                  kyNi+KeYXSgpFDKOJyEexVbFmHu4pbnUG7vnI69pSpnxE8tDjVnFKO9cVmn1sOI6                  CfKVrtEVGTli1hhSK1z7C7kCgYAdRyp/UnB8ybo+In0Gsw5EQCBe6dlvRZQY3KQ5                  3//5P+BGYEzq936h/bGyVrYue1kLrckI7xwke4AL0jvtQYTKEHd//6blxVx/0ZRs                  VeMsJAes8vtVFrECmqROqmJEAJ9CfR43L6fNmtm0RO6OhGXyvOO60A43eAfP+iVh                  oqnwawKBgDBJrMa/V/dv7BZU+JuVA03PhrQPUpN3d98BCpJ1ZhTu/LrvCsum5OE2                  EclAxfI4qrCWR5wcSlPJWKkUtcpAXdRQ0ichwP4v7G2TJKnb58PT++6jgve4rseU                  veJRMC1m2LUxWEDvmYKOqRLwpc0vnJt01SCEluVlFgX0r1HNtkfc                  -----END RSA PRIVATE KEY-----
+        script: |
+          cd /path
