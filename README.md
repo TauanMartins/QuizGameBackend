@@ -9,6 +9,7 @@ So if you are running Linux, run these commands first:
     
 And finally, let's build:
 - Clone this project to your EC2 machine for example
+- Run "composer install"
 - Adjust your .env with "cp .env.example .env" and replace 
     - APP_DEBUG=false
     - APP_NAME=QuizGameBackend
@@ -19,7 +20,6 @@ And finally, let's build:
 
 ## Inside the container
 
-- Run "composer install"
 - Run "php artisan key:generate"
 - Run "php artisan migrate"
 - Run "php artisan db:seed"
