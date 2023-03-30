@@ -24,12 +24,23 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd sockets
 
 # Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Composer dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
+
+# Copy the composer.json and composer.lock files
+COPY composer.json composer.lock /var/www/
+
+# Install Laravel dependencies with Composer
+RUN composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
 # Install redis
 RUN pecl install -o -f redis \
