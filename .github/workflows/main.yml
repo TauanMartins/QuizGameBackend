@@ -24,6 +24,16 @@ jobs:
         sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env
         docker-compose build
         docker images
+    - name: Save Docker image to file
+      run: docker save quizgamebackend_app  -o quizgamebackend_app .tar
+    - name: Copy Docker image to remote server
+      uses: appleboy/scp-action@master
+      with:
+        host: 54.233.149.212
+        username: tauan
+        password: 8617775759
+        source: quizgamebackend_app.tar
+        target: /tmp
     # Etapa de Deploy na máquina de produção
     - name: Deploy to production server
       uses: appleboy/ssh-action@master
@@ -32,15 +42,7 @@ jobs:
         username: tauan
         password: 8617775759
         script: |
-          ls -la
-          cp .env.example .env
-          sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env
-          sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env
-          sed -i "s/DB_HOST=.*/DB_HOST=54.233.149.212/g" .env
-          sed -i "s/DB_PORT=.*/DB_PORT=5432/g" .env
-          sed -i "s/DB_DATABASE=.*/DB_DATABASE=postgres/g" .env
-          sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env
-          sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env  
-          sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env
+          docker load -i /tmp/quizgamebackend_app.tar
+          rm /tmp/quizgamebackend_app.tar
           docker-compose up -d
           docker-compose exec app bash -c "php artisan key:generate && php artisan migrate"
