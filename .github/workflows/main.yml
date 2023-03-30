@@ -28,7 +28,7 @@ jobs:
           docker kill quizgamebackend_queue_1 quizgamebackend_app_1 quizgamebackend_redis_1 quizgamebackend_nginx_1
           docker system prune -af
           docker-compose up -d
-          cd /tmp && rm -rf QuizGameBackend
+          sudo rm -rf cd /tmp/QuizGameBackend
           docker-compose exec -T app bash -c "cp .env.example .env && \
           sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env && \
           sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env && \
