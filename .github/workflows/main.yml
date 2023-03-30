@@ -14,7 +14,7 @@ jobs:
         username: tauan
         password: 8617775759
         script: |
-          cd /home/tauan
+          cd /tmp
           git clone https://github.com/TauanMartins/QuizGameBackend.git
     - name: Set permissions and deploy
       uses: appleboy/ssh-action@v0.1.6
@@ -23,7 +23,7 @@ jobs:
         username: tauan
         password: 8617775759
         script: |
-          cd /home/tauan/QuizGameBackend
+          cd /tmp/QuizGameBackend
           chmod -R 777 ./
           docker kill quizgamebackend_queue_1 quizgamebackend_app_1 quizgamebackend_redis_1 quizgamebackend_nginx_1
           docker system prune -af
