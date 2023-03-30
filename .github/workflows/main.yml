@@ -7,42 +7,33 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    # Etapa de Instalação de dependências e compilação
-    - name: Install dependencies and build
-      run: |
-        cp .env.example .env
-        sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env
-        sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env
-        sed -i "s/DB_HOST=.*/DB_HOST=54.233.149.212/g" .env
-        sed -i "s/DB_PORT=.*/DB_PORT=5432/g" .env
-        sed -i "s/DB_DATABASE=.*/DB_DATABASE=postgres/g" .env
-        sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env
-        sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env  
-        sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env
-        docker-compose build
-        docker images
-    - name: Save Docker image to file
-      run: docker save quizgamebackend_app  -o quizgamebackend_app.tar
-    - name: Copy Docker image to remote server
-      uses: appleboy/scp-action@master
-      with:
-        host: 54.233.149.212
-        username: tauan
-        password: 8617775759
-        source: quizgamebackend_app.tar
-        target: /tmp
-    # Etapa de Deploy na máquina de produção
-    - name: Deploy to production server
-      uses: appleboy/ssh-action@master
+    - name: Clone repo on remote machine
+      uses: appleboy/ssh-action@v0.1.6
       with:
         host: 54.233.149.212
         username: tauan
         password: 8617775759
         script: |
-          docker load -i /tmp/quizgamebackend_app.tar
-          rm /tmp/quizgamebackend_app.tar
-          docker exec -it quizgamebackend_app bash
-          docker ps
+          cd /tmp
+          git clone https://github.com/TauanMartins/QuizGameBackend.git
+    - name: Set permissions and deploy
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: 54.233.149.212
+        username: tauan
+        password: 8617775759
+        script: |
+          cd /tmp/QuizGameBackend
+          cp .env.example .env
+          sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env
+          sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env
+          sed -i "s/DB_HOST=.*/DB_HOST=54.233.149.212/g" .env
+          sed -i "s/DB_PORT=.*/DB_PORT=5432/g" .env
+          sed -i "s/DB_DATABASE=.*/DB_DATABASE=postgres/g" .env
+          sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env
+          sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env  
+          sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env
+          chmod -R 777 ./
+          docker-compose up -d
+          docker-compose exec app bash -c "php artisan key:generate && php artisan migrate && php artisan db:seed"
+          
