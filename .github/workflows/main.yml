@@ -36,5 +36,5 @@ jobs:
           sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env && \
           sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env && \
           sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env"
-          docker-compose exec -T app bash -c "composer install && php artisan key:generate -y && php artisan migrate -y && php artisan db:seed -y"
+          docker-compose exec -T app bash -c "composer install && php artisan key:generate && php artisan migrate && php artisan db:seed"
           
