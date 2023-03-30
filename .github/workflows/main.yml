@@ -23,6 +23,7 @@ jobs:
         sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env  
         sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env
         docker-compose build
+        docker images
     # Etapa de Deploy na máquina de produção
     - name: Deploy to production server
       uses: appleboy/ssh-action@master
@@ -31,6 +32,7 @@ jobs:
         username: tauan
         password: 8617775759
         script: |
+          ls -la
           cp .env.example .env
           sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env
           sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env
