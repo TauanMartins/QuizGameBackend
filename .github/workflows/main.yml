@@ -15,7 +15,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         script: |
           docker kill quizgamebackend_queue_1 quizgamebackend_app_1 quizgamebackend_redis_1 quizgamebackend_nginx_1
-          rm -rf /tmp/QuizGameBackend
+          sudo rm -rf /tmp/QuizGameBackend
           cd /tmp          
           git clone https://github.com/TauanMartins/QuizGameBackend.git
     - name: Set permissions and deploy
