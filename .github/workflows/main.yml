@@ -39,5 +39,5 @@ jobs:
           sed -i "s/DB_USERNAME=.*/DB_USERNAME=${{ secrets.DB_USERNAME }}/g" .env && \
           sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=${{ secrets.SCHEMA }}/g" .env && \
           sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g" .env"
-          docker-compose exec -T app bash -c "composer install && php artisan key:generate && php artisan migrate --force --seed --no-interaction && php artisan db:seed"
+          docker-compose exec -T app bash -c "composer install && php artisan key:generate"
           
