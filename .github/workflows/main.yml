@@ -10,9 +10,9 @@ jobs:
     - name: Clone repo on remote machine
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: 54.233.149.212
-        username: tauan
-        password: 8617775759
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
         script: |
           docker kill quizgamebackend_queue_1 quizgamebackend_app_1 quizgamebackend_redis_1 quizgamebackend_nginx_1
           rm -rf /tmp/QuizGameBackend
@@ -21,9 +21,9 @@ jobs:
     - name: Set permissions and deploy
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: 54.233.149.212
-        username: tauan
-        password: 8617775759
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
         script: |
           cd /tmp/QuizGameBackend
           chmod -R 777 ./          
@@ -33,11 +33,11 @@ jobs:
           sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env && \
           sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env && \
           sed -i "s/APP_ENV=.*/APP_ENV=production/g" .env && \
-          sed -i "s/DB_HOST=.*/DB_HOST=54.233.149.212/g" .env && \
-          sed -i "s/DB_PORT=.*/DB_PORT=5432/g" .env && \
-          sed -i "s/DB_DATABASE=.*/DB_DATABASE=postgres/g" .env && \
-          sed -i "s/DB_USERNAME=.*/DB_USERNAME=postgres/g" .env && \
-          sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env && \
-          sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env"
-          docker-compose exec -T app bash -c "composer install && php artisan key:generate && php artisan migrate --force --seed --no-interaction -y && php artisan db:seed"
+          sed -i "s/DB_HOST=.*/DB_HOST=${{ secrets.DB_HOST }}/g" .env && \
+          sed -i "s/DB_PORT=.*/DB_PORT=${{ secrets.DB_PORT }}/g" .env && \
+          sed -i "s/DB_DATABASE=.*/DB_DATABASE=${{ secrets.DB_DATABASE }}/g" .env && \
+          sed -i "s/DB_USERNAME=.*/DB_USERNAME=${{ secrets.DB_USERNAME }}/g" .env && \
+          sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=${{ secrets.SCHEMA }}/g" .env && \
+          sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g" .env"
+          docker-compose exec -T app bash -c "composer install && php artisan key:generate && php artisan migrate --force --seed --no-interaction && php artisan db:seed"
           
