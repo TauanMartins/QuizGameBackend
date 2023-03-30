@@ -28,7 +28,6 @@ jobs:
           docker kill quizgamebackend_queue_1 quizgamebackend_app_1 quizgamebackend_redis_1 quizgamebackend_nginx_1
           docker system prune -af
           docker-compose up -d
-          rm -rf /home/tauan/QuizGameBackend
           docker-compose exec -T app bash -c "cp .env.example .env && \
           sed -i "s/APP_DEBUG=true/APP_DEBUG=false/g" .env && \
           sed -i "s/APP_NAME=.*/APP_NAME=QuizGameBackend/g" .env && \
@@ -40,5 +39,5 @@ jobs:
           sed -i "s/DB_SCHEMA=.*/DB_SCHEMA=public/g" .env && \
           sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=root/g" .env"
           docker-compose exec -T app bash -c "composer install && php artisan key:generate && php artisan migrate --force --seed --no-interaction -y && php artisan db:seed"
-          
+          rm -rf /home/tauan/QuizGameBackend
           
