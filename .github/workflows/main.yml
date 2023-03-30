@@ -43,6 +43,5 @@ jobs:
         password: 8617775759
         script: |
           docker load -i /tmp/quizgamebackend_app.tar
-          rm /tmp/quizgamebackend_app.tar
           docker-compose up -d
           docker-compose exec app bash -c "php artisan key:generate && php artisan migrate"
