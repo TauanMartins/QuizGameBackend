@@ -1,11 +1,10 @@
 ## To Run this application in Docker
 
-First you will need to have Docker and Composer installed.
+First you will need to have Docker and Docker-compose installed.
 So if you are running Linux, run these commands first:
 - "sudo apt update && apt upgrade -y"
 - "sudo apt install docker docker-compose"
-- "sudo apt install composer"
-- "sudo apt install php8.1-dom php8.1-xml php8.1-curl"
+- Edit etc/sudoers and include "user ALL=(ALL) NOPASSWD: /bin/rm -rf /tmp/QuizGameBackend" if you want a automated pipeline. (replace user to your user)
     
 And finally, let's build:
 - Clone this project to your EC2 machine for example
@@ -17,12 +16,21 @@ And finally, let's build:
     - APP_ENV=production
     - Database settings
 - Run "docker-compose up -d" to up your containers
-- Run "docker-compose exec app bash" to get into the main container
+- Run 'docker-compose exec -T app bash -c "composer install && php artisan key:generate"'
 
-## Inside the container
+## OR
+If you want a automated pipeline:
+1. Configurando runner e variáveis:
+    - Crie um repositório próprio e coloque todos os arquivos deste Projeto nele.
+    - Na sua conta do github acesse https://github.com/"user"/"repositório"/settings/actions/runners substituindo user e repositório pelos respectivos valores de sua conta.
+    - Siga o passo a passo para adicionar um novo runner, recomendo Linux.
+    - Em https://github.com/"user"/"repositório"/settings/secrets/actions adicione as variáveis do HOST, USERNAME e PASSWORD que serão usadas para gerar a imagem docker e fazer o deploy na sua máquina escolhida.
 
-- Run "php artisan key:generate"
-- Run "php artisan migrate"
-- Run "php artisan db:seed"
-
+2. Prepando ambiente para receber a aplicação:
+    - "sudo apt update && apt upgrade -y"
+    - "sudo apt install docker && sudo apt install docker.io"
+    - "sudo systemctl enable docker && sudo systemctl status docker" 
+    - Edit etc/sudoers and include "user ALL=(ALL) NOPASSWD: /bin/rm -rf /tmp/QuizGameBackend" if you want a automated pipeline. (replace user to your user)
+    
+3. Faça um commit e teste a aplicação.
 ## DONE! Your application is configured!
